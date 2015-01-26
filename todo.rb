@@ -3,8 +3,8 @@ require 'pry'
 require 'tempfile'
 require "sinatra/reloader" 
 require "awesome_print"
-enable :sessions
-set :session_secret, 'super secret'
+# enable :sessions
+# set :session_secret, 'super secret'
 
 
 # Task = Struct.new(:description)
@@ -13,14 +13,28 @@ set :session_secret, 'super secret'
 
 
 class Task
+	attr_accessor :task
 	def initialize(task)
+
 		@task = task
+		
+		@complete = false
 	end
 
-	def completed(task)
-		@task = "#{@task}: Completed"
+	def complete!
+		@complete = true
+	end
+
+
+
+	def completed?
+		return @complete
 
 	end
+	def name
+		return @task
+	end
+
 
 
 
@@ -29,27 +43,24 @@ end
 
 
 todos_list = []
+
 todos_list << Task.new("Buy Milk")
-todos_list << Task.new("Do laundry")
-todos_list << Task.new("Finish todo list")
-# todos_list.add("Buy Milk")
-# todos_list.add("Finish todo list")
-# todos_list.add("Do Laundry")
-# (["Buy Milk", "Finish todo list", "Do laundry"])
-# todos_list << Task.new("Buy Milk")
-# todos_list << Task.new("Finish todo list")
-# todos_list << Task.new("Do laundry")
+ todos_list << Task.new("Do laundry")
+ todos_list << Task.new("Finish todo list")
+
+
 
 
 get "/" do 
 	erb :index
+
 
 end
 
 get "/tasks" do 
 
 	@todos_list = todos_list
-	ap @todos_list
+	
 	erb :tasks
 
 end
@@ -60,8 +71,9 @@ get "/reset" do
 end
 
 get "/complete/:tasknum" do
+	@todos_list = todos_list
 	tasknum = params[:tasknum].to_i
-	completed(todos_list[tasknum])
+	(@todos_list[tasknum]).complete!
 	redirect to("/tasks")
 end
 
@@ -70,9 +82,10 @@ end
 
 
 get "/delete/:tasknum" do
+	
 	tasknum = params[:tasknum].to_i
-
-	todos_list.delete_at(tasknum)
+	@todos_list = todos_list
+	@todos_list.delete_at(tasknum)
 
 	 redirect to("/tasks")
 	

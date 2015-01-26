@@ -1,31 +1,40 @@
-
-
-<h1>Task List</h1>
-
-<a href="/">Home</a><br />
-<a href="/reset">Reset</a><br />
-
-	<br />
-	<br />
-	<br />
-	<br />
-	<br />
-	<body>
-	
-	<% @todos_list.each_with_index do |task, index| %>
-	
-	<h2><a href="/complete/<%= index %>"><%= task %></a>
-		<% if @todos_list[index].completed %>
-			<h2><a href="/complete/<%= index %>"><%= task %></a> <a href="/delete/<%= index %>"> Delete?</a></h2>
-		<% end %>
-		<% end %>
-	
-
-
-
-
-	
-	</body>
-
-	
+<doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Task List</title>
+  </head>
+  <body>
+    
+    <h1>Task List</h1>
+  
+    <a href="/">Home</a><br />
+    <a href="/reset">Reset</a><br />
+  
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+      
+    <% @todos_list.each_with_index do |task, index| %>
+      <% if task.completed? %>
+        <h2>
+          
+         	  
+              <%= task.name %>----Completed
+         
+          <a href="/delete/<%= index %>"> Delete?</a>
+          </h2>
+      
+      <% else %>
+        <h2>
+          <a href="/complete/<%= index %>"><%= task.name %></a>
+         
+         
+        </h2>
+      <% end %>
+    <% end %>  
+  </body>
+</html>
 
